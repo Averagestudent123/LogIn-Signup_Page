@@ -5,17 +5,20 @@ const cors = require('cors');
 require('dotenv').config();
 require('./Model/db');
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3000;
 
-app.get('/', (req,res) => {
-    res.send('Hello');
-})
-
-app.use(cors());
+const allowedOrigin = process.env.CLIENT_URL || 'http://localhost:5173';
+app.use(cors({ origin: allowedOrigin, credentials: true }));
 app.use(bodyParser.json());
+
+app.get('/', (req, res) => {
+    res.send('Auth API is running');
+});
+
 app.use('/auth', require('./Routes/AuthRouter'));
-app.use('/products', require('./Routes/ProductRouter'));
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
-})
+});
+
+module.exports = app;
